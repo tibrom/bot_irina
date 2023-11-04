@@ -1,0 +1,9 @@
+fastapi
+psycopg2
+aiohttp
+aiogram==3.1.1
+asyncpg
+uvicorn
+sqlalchemy
+databases
+databases[postgresql]

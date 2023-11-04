@@ -1,0 +1,40 @@
+version: '3'
+services:
+  bot_db:
+    image: postgres:15
+    ports:
+      - 32704:5432 # 32704 внешний порт для подключения к бд
+    volumes:
+      - /var/lib/telegram_bot:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=bot_data
+    networks:
+      - botnetwork2
+  telegram_bot:
+    build:
+      context: .
+      dockerfile: Dockerfile_bot
+    container_name: telegram_bot
+    restart: always
+    environment:
+      - BOT_TOKEN=5676281811:AAGj_O56Y_NCUc0_ws5-P-h96hw4VkX6OKE #токен телеграм бота, можно передать через перемменную окружения
+      - PREFIX=''
+    networks:
+      - botnetwork2
+  telegram_bot_server:
+    build:
+      context: .
+      dockerfile: Dockerfile_server
+    container_name: bot_server
+    restart: always
+    ports:
+      - 33033:8080 #33033 внешний порт приложения
+    environment:
+      - BOT_TOKEN=5676281811:AAGj_O56Y_NCUc0_ws5-P-h96hw4VkX6OKE #токен телеграм бота, можно передать через перемменную окружения
+    networks:
+      - botnetwork2
+networks:
+  botnetwork2:
+    driver: bridge

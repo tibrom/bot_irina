@@ -1,0 +1,19 @@
+FROM python:3.9
+
+
+WORKDIR /code
+
+
+COPY ./requirements.txt /code/requirements.txt
+RUN pip config set global.index-url https://pypi.org/simple
+RUN pip config set global.extra-index-url https://pypi.org/simple
+
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+
+
+
+COPY . /code
+
+
+
+CMD ["python", "telegram_bot.py"]
