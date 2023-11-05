@@ -1,7 +1,7 @@
 import os
 import datetime
 
-from db.data_base import message_types
+
 from server.models import MessageType
 
 NEW_USER_MESSAGE = 'Новый пользователь в боте.\nИмя name\nТелеграм ID tg_id'

@@ -4,7 +4,7 @@ from sqlalchemy import select
 from typing import List
 from fastapi import HTTPException
 from .base_repositories import BaseRepository
-from db.data_base import message_type_chats, message_types, chats
+
 from bot.create_bot import bot
 from core.logger import logger
 
