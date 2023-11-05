@@ -8,9 +8,8 @@ from pydantic import BaseModel, EmailStr, validator, constr
 
 class MessageType(BaseModel):
     tg_id: int
-    username: str
+    id: str
     detali: str
-    addres: str
 
 
 

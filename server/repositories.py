@@ -17,7 +17,7 @@ class MainRepository(BaseRepository):
     
 
     async def send_message(self, message: MessageType):
-        answer  = BASE_MESSAGE + f'{message.detali}\n{message.addres}'
+        answer  = BASE_MESSAGE + f'{message.detali}\n{message.id}'
         await bot.send_message(
             message.tg_id,
             text=answer

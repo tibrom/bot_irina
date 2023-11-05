@@ -9,6 +9,6 @@ users = Table(
     metadata,
     Column('id', Integer, primary_key=True, autoincrement=True, unique= True),
     Column('created_at', DateTime, default=datetime.datetime.utcnow()),
-    Column('tg_id', Integer),
+    Column('tg_id', String),
     Column('is_admin', Boolean),
 )
