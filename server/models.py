@@ -7,7 +7,7 @@ from pydantic import BaseModel, EmailStr, validator, constr
 
 
 class MessageType(BaseModel):
-    tg_id: int
+    tg_id: str
     id: str
     detali: str
 
