@@ -4,12 +4,13 @@ import datetime
 
 from server.models import MessageType
 
-NEW_USER_MESSAGE = 'Новый пользователь в боте.\nИмя name\nТелеграм ID tg_id'
+NEW_CHAT_MESSAGE = 'Бот добавлен в новую группу.\nГруппа: name\nID: tg_id'
+DELETE_CHAT_MESSAGE = 'Бот удаленный из группы.\nГруппа: name\nID: tg_id'
 START_MESSAGE = 'Добропожаловать, бот работает'
 GREETING_ADMIN = 'Профиль успешно добавлен в администраторы'
 
 
-BASE_MESSAGE = 'Новый заказ\ninfo'
+BASE_MESSAGE = 'Новый заказ'
 
 
 
