@@ -11,6 +11,7 @@ GREETING_ADMIN = 'Профиль успешно добавлен в админи
 
 BASE_MESSAGE = 'Новый заказ\ninfo'
 
+SUPERVISOR_TOKEN = 'BBBB945fh7405-9g475'
 
 DEFAULT_TOKEN = 'AAAA947hjt4398jr4ur'
 

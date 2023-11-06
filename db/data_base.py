@@ -11,4 +11,5 @@ users = Table(
     Column('created_at', DateTime, default=datetime.datetime.utcnow()),
     Column('tg_id', String),
     Column('is_admin', Boolean),
+    Column('is_supervisor', Boolean),
 )

@@ -10,6 +10,7 @@ class MessageType(BaseModel):
     tg_id: str
     id: str
     detali: str
+    recipient: Optional[str] = None
 
 
 
