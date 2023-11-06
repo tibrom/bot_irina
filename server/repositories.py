@@ -19,21 +19,12 @@ class MainRepository(BaseRepository):
     
 
     async def send_message(self, message: MessageType):
-        query = users.select().where(
-            users.c.is_supervisor==True
-        )
-        supervisor_info = await database.fetch_all(query)
+    
         answer  = BASE_MESSAGE + f'\n{message.detali}\n{message.id}'
         await bot.send_message(
             message.tg_id,
             text=answer
         )
-        supervisor_message = answer + f'\n Получил заявку:{message.recipient}'
-        for supervisor in supervisor_info:
-            await bot.send_message(
-                supervisor.tg_id,
-                text=supervisor_message
-            )
         
 
 

@@ -29,7 +29,6 @@ async def user_control(message: types.Message):
         value = {
             'tg_id': str(message.from_user.id),
             'is_admin': False,
-            'is_supervisor': False
         }
         query = users.insert().values(**value)
         await database.execute(query)
@@ -69,29 +68,10 @@ async def new_admin(message: types.Message):
         text=GREETING_ADMIN
     )
 
-async def new_supervisor(message: types.Message):
-    if message.text != SUPERVISOR_TOKEN:
-        return
-    
-    query_user = users.select().where(
-        users.c.tg_id==str(message.from_user.id),
-        users.c.is_supervisor==True
-    )
-    user_info = await database.fetch_one(query_user)
-    if user_info is None:
-        value = {
-            'is_supervisor': True
-        }
-        query = users.update().where(users.c.tg_id==str(message.from_user.id)).values(**value)
-        await database.execute(query)
-    await bot.send_message(
-        message.from_user.id,
-        text="Профиль добавлен в наблюдатели"
-    )
+
 
 
 def register_handler(dp: Dispatcher):
     dp.message.register(user_control, CommandStart())
     dp.message.register(new_admin, F.text.startswith("AAAA"))
-    dp.message.register(new_supervisor, F.text.startswith("BBBB"))
     

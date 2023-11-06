@@ -6,7 +6,6 @@ from db.data_base import users
 from server.endpoints import router
 
 from core.config import PREFIX
-from core.update_db import column_control
 
 
 
@@ -29,12 +28,6 @@ app.include_router(router, tags=['main'])
 @app.on_event('startup')
 async def startup():
     await database.connect()
-    await column_control(
-        database=database,
-        table_name='users',
-        columname='is_supervisor',
-        tepe='BOOLEAN'
-    )
    
     
 @app.on_event('shutdown')
