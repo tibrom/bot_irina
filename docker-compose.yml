@@ -20,7 +20,7 @@ services:
     container_name: telegram_bot
     restart: always
     environment:
-      - BOT_TOKEN=5676281811:AAGj_O56Y_NCUc0_ws5-P-h96hw4VkX6OKE #токен телеграм бота, можно передать через перемменную окружения
+      - BOT_TOKEN=777 #токен телеграм бота, можно передать через перемменную окружения
       - PREFIX=''
     networks:
       - botnetwork2
@@ -33,7 +33,7 @@ services:
     ports:
       - 33033:8080 #33033 внешний порт приложения
     environment:
-      - BOT_TOKEN=5676281811:AAGj_O56Y_NCUc0_ws5-P-h96hw4VkX6OKE #токен телеграм бота, можно передать через перемменную окружения
+      - BOT_TOKEN=777 #токен телеграм бота, можно передать через перемменную окружения
     networks:
       - botnetwork2
 networks:
