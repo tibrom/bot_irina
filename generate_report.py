@@ -99,4 +99,4 @@ async def scheduled(wait_for):
         await make_request_and_send()
 
 if __name__ == '__main__':
-    asyncio.run(scheduled(3))
+    asyncio.run(scheduled(10))
