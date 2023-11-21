@@ -9,9 +9,9 @@ from aiogram import Bot, Dispatcher, types
 import aiohttp
 
 # Ваш токен бота от BotFather
-TOKEN = '5676281811:AAGj_O56Y_NCUc0_ws5-P-h96hw4VkX6OKE'#os.getenv("BOT_TOKEN")
+TOKEN = os.getenv("BOT_TOKEN")
 # ID чата, куда будут отправляться данные
-CHAT_ID = '-1001866962365'#os.getenv("CHAT_ID")
+CHAT_ID = os.getenv("CHAT_ID")
 
 
 
