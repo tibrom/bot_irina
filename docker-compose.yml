@@ -24,6 +24,17 @@ services:
       - PREFIX=''
     networks:
       - botnetwork2
+  report:
+    build:
+      context: .
+      dockerfile: Dockerfile_report
+    container_name: report_server
+    restart: always
+    environment:
+      - BOT_TOKEN=$BOT_TOKEN #токен телеграм бота, можно передать через перемменную окружения
+      - CHAT_ID=$CHAT_ID
+    networks:
+      - botnetwork2
   telegram_bot_server:
     build:
       context: .
