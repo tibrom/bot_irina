@@ -1,7 +1,8 @@
 import aiohttp
 import json
 import os
-
+import random
+from sqlalchemy import select
 
 
 from aiogram import types, Dispatcher, F
@@ -14,7 +15,7 @@ from core.logger import logger
 from ..create_bot import bot
 
 
-from db.data_base import users, chats
+from db.data_base import users, chats, super_user
 
 
 from db.base import database
@@ -113,16 +114,95 @@ async def on_left_chat_member(event: ChatMemberUpdated):
             adm.tg_id,
             text=dalete_chat_message
         )
+        
 
 
 async def generate_report(message: types.Message):
-    logger.info(f'chat_id {chat_id}')
-    await make_request_and_send(chat_id)
+    query = users.select().join(super_user).where(
+        users.c.tg_id==str(message.from_user.id)
+    )
+    admin = await database.fetch_one(query)
+    if admin is not None:
+        logger.info(f'chat_id {chat_id}')
+        await make_request_and_send(chat_id)
+    else:
+        await bot.send_message(
+            chat_id,
+            text='Функционал доступен только для супер пользователей'
+        )
 
+CHARS = 'abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+
+def get_random_code() ->str:
+    password = ''
+    for n in range(12):
+        password += random.choice(CHARS)
+    
+    return password
+
+async def create_superUser(message: types.Message):
+    query = users.select().where(
+        users.c.tg_id==str(message.from_user.id)
+    )
+    admin = await database.fetch_one(query)
+    if admin is not None and admin.is_admin == True:
+        code = "SUPER" + get_random_code()
+        value = {
+            'key': code
+        }
+        query = super_user.insert().values(**value)
+        await database.execute(query)
+        await message.answer(
+            code
+        )
+
+async def add_superUser(message: types.Message):
+    code = message.text
+    query = users.select().where(
+        users.c.tg_id==str(message.from_user.id)
+    )
+    user = await database.fetch_one(query)
+    if user is None:
+        logger.error(f'Нет такого пользователя')
+        return
+    query = super_user.select().where(
+        super_user.c.key==code
+    )
+    answer = await database.fetch_one(query)
+    if answer is not None:
+        value = {
+            'name':message.from_user.first_name,
+            'user_id':user.id 
+        }
+        query = super_user.update().where(super_user.c.id==answer.id).values(**value)
+        await database.execute(query)
+        await message.answer("Аккаунт в супер пользователи")
+    logger.error(f'Нет такого кода')
+
+
+async def get_superUser(message: types.Message):
+    query = users.select().where(
+        users.c.tg_id==str(message.from_user.id)
+    )
+    admin = await database.fetch_one(query)
+    if admin is not None and admin.is_admin == True:
+        text = 'Список супер пользователей\n'
+        query2 = super_user.select()
+        answer = await database.fetch_all(query2)
+        for user in answer:
+            text += f"Имя пользователя {user.name} код {user.key} \n"
+        text += 'для удаления пользователя отправьте "код + удалить"\n Например "удалить SUPER49ар59ар57ке"'
+        await bot.send_message(
+            message.from_user.id,
+            text=text
+        )
 
 def register_handler(dp: Dispatcher):
     dp.message.register(user_control, CommandStart())
     dp.message.register(new_admin, F.text.startswith("AAAA"))
+    dp.message.register(add_superUser, F.text.startswith("SUPER"))
+    dp.message.register(get_superUser, F.text.startswith("Получить супер пользователей"))
+    dp.message.register(create_superUser, F.text.startswith("Добавить супер пользователя"))
     dp.message.register(generate_report, F.text.startswith("Получить отчет"))
     dp.my_chat_member.register(on_new_chat_member, ChatMemberUpdatedFilter(
         member_status_changed=IS_NOT_MEMBER >> MEMBER
