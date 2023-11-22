@@ -8,6 +8,8 @@ from aiogram import types, Dispatcher, F
 from aiogram.filters import CommandStart
 from aiogram.types import ChatMemberUpdated
 from aiogram.filters.chat_member_updated import ChatMemberUpdatedFilter, JOIN_TRANSITION, IS_NOT_MEMBER, MEMBER
+from core.config import chat_id
+from core.logger import logger
 
 from ..create_bot import bot
 
@@ -114,7 +116,8 @@ async def on_left_chat_member(event: ChatMemberUpdated):
 
 
 async def generate_report(message: types.Message):
-    await make_request_and_send(CHAT_ID)
+    logger.debug(f'chat_id {chat_id}')
+    await make_request_and_send(chat_id)
 
 
 def register_handler(dp: Dispatcher):

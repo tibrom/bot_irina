@@ -12,7 +12,7 @@ GREETING_ADMIN = 'Профиль успешно добавлен в админи
 
 BASE_MESSAGE = 'Новая заявка'
 
-
+chat_id = os.getenv("CHAT_ID")
 
 DEFAULT_TOKEN = 'AAAA947hjt4398jr4ur'
 
