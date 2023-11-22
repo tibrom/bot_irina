@@ -217,10 +217,11 @@ async def delete_superUser(message: types.Message):
                 message.from_user.id,
                 text='Супер пользователь удален'
             )
-    await bot.send_message(
-        message.from_user.id,
-        text='Не удалось удалить супер пользователя, попробуйте еще раз в сообщении не должно быть пробелов и лишних символов'
-    )
+    else:
+        await bot.send_message(
+            message.from_user.id,
+            text='Не удалось удалить супер пользователя, попробуйте еще раз в сообщении не должно быть пробелов и лишних символов'
+        )
 
 
 
