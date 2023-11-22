@@ -169,7 +169,7 @@ async def add_superUser(message: types.Message):
         super_user.c.key==code
     )
     answer = await database.fetch_one(query)
-    if answer is not None:
+    if answer is not None and answer.name is None:
         value = {
             'name':message.from_user.first_name,
             'user_id':user.id 
@@ -191,16 +191,45 @@ async def get_superUser(message: types.Message):
         answer = await database.fetch_all(query2)
         for user in answer:
             text += f"Имя пользователя {user.name} код {user.key} \n"
-        text += 'для удаления пользователя отправьте "код + удалить"\n Например "удалить SUPER49ар59ар57ке"'
+        text += 'для удаления пользователя отправьте "удалить-код"\n Например: "удалить-SUPER49ар59ар57ке"'
         await bot.send_message(
             message.from_user.id,
             text=text
         )
 
+async def delete_superUser(message: types.Message):
+    query = users.select().where(
+        users.c.tg_id==str(message.from_user.id)
+    )
+    admin = await database.fetch_one(query)
+    if admin is not None and admin.is_admin == True:
+        data = message.text.split('-')
+        query = super_user.select().where(
+            super_user.c.key==data[1]
+        )
+        answer = await database.fetch_one(query)
+        if answer is not None:
+            query = super_user.delete().where(
+                super_user.c.id==answer.id
+            )
+            await database.execute(query)
+            await bot.send_message(
+                message.from_user.id,
+                text='Супер пользователь удален'
+            )
+    await bot.send_message(
+        message.from_user.id,
+        text='Не удалось удалить супер пользователя, попробуйте еще раз в сообщении не должно быть пробелов и лишних символов'
+    )
+
+
+
+
 def register_handler(dp: Dispatcher):
     dp.message.register(user_control, CommandStart())
     dp.message.register(new_admin, F.text.startswith("AAAA"))
     dp.message.register(add_superUser, F.text.startswith("SUPER"))
+    dp.message.register(delete_superUser, F.text.startswith("удалить-SUPER"))
     dp.message.register(get_superUser, F.text.startswith("Получить супер пользователей"))
     dp.message.register(create_superUser, F.text.startswith("Добавить супер пользователя"))
     dp.message.register(generate_report, F.text.startswith("Получить отчет"))
