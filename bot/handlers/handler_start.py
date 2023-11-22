@@ -1,5 +1,6 @@
 import aiohttp
 import json
+import os
 
 
 
@@ -19,7 +20,7 @@ from generate_report import make_request_and_send
 
 from core.config import NEW_CHAT_MESSAGE, START_MESSAGE, GREETING_ADMIN, DEFAULT_TOKEN, DELETE_CHAT_MESSAGE
 
-
+CHAT_ID = os.getenv("CHAT_ID")
 
 async def user_control(message: types.Message):
     query_user = users.select().where(
@@ -113,7 +114,7 @@ async def on_left_chat_member(event: ChatMemberUpdated):
 
 
 async def generate_report(message: types.Message):
-    await make_request_and_send()
+    await make_request_and_send(CHAT_ID)
 
 
 def register_handler(dp: Dispatcher):

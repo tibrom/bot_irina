@@ -64,7 +64,7 @@ async def get_text(url, city):
         return text_result
 
 
-async def make_request_and_send():
+async def make_request_and_send(chat_id):
     kb = [
         [
             types.KeyboardButton(text="Получить отчет"),
@@ -94,7 +94,7 @@ async def make_request_and_send():
                         )
                         text += message_text + "\n"
                     except: pass
-            await bot.send_message(chat_id=CHAT_ID, text=text, reply_markup=keyboard)
+            await bot.send_message(chat_id=chat_id, text=text, reply_markup=keyboard)
 
 
 
@@ -111,7 +111,7 @@ async def scheduled(wait_for):
 
         # Планируем запрос только в указанные часы
         if current_time in ["14:00", "17:00", "19:00", "21:00"]:
-            await make_request_and_send()
+            await make_request_and_send(chat_id=CHAT_ID)
 
 if __name__ == '__main__':
     asyncio.run(scheduled(60))
