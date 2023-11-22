@@ -116,7 +116,7 @@ async def on_left_chat_member(event: ChatMemberUpdated):
 
 
 async def generate_report(message: types.Message):
-    logger.debug(f'chat_id {chat_id}')
+    logger.info(f'chat_id {chat_id}')
     await make_request_and_send(chat_id)
 
 
