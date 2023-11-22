@@ -15,6 +15,7 @@ from db.data_base import users, chats
 
 
 from db.base import database
+from generate_report import make_request_and_send
 
 from core.config import NEW_CHAT_MESSAGE, START_MESSAGE, GREETING_ADMIN, DEFAULT_TOKEN, DELETE_CHAT_MESSAGE
 
@@ -109,12 +110,16 @@ async def on_left_chat_member(event: ChatMemberUpdated):
             adm.tg_id,
             text=dalete_chat_message
         )
-   
+
+
+async def generate_report(message: types.Message):
+    await make_request_and_send()
 
 
 def register_handler(dp: Dispatcher):
     dp.message.register(user_control, CommandStart())
     dp.message.register(new_admin, F.text.startswith("AAAA"))
+    dp.message.register(generate_report, F.text.startswith("Получить отчет"))
     dp.my_chat_member.register(on_new_chat_member, ChatMemberUpdatedFilter(
         member_status_changed=IS_NOT_MEMBER >> MEMBER
     ))

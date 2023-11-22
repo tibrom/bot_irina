@@ -34,7 +34,8 @@ bot = Bot(TOKEN, parse_mode=ParseMode.HTML)
 
 
 
-async def sendet_messsage(url, city):
+async def get_text(url, city):
+    text_result = ''
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             data = {}
@@ -56,15 +57,28 @@ async def sendet_messsage(url, city):
                     flag = "✔️"
                 else:
                     flag = "❌"
-                text = f"{city} -- {data.get('summ')}--{data.get('meetings')}/{data.get('meetings_sales')}--{data.get('percent')} {flag}"
-                await bot.send_message(chat_id=CHAT_ID, text=text)
+                text = f"{city} -- {data.get('summ')}--{data.get('meetings')}/{data.get('meetings_sales')}--{data.get('percent')}% {flag}"
+                return text
+                
     
-        return
+        return text_result
 
 
 async def make_request_and_send():
+    kb = [
+        [
+            types.KeyboardButton(text="Получить отчет"),
+        ],
+    ]
+    keyboard = types.ReplyKeyboardMarkup(
+        keyboard=kb,
+        resize_keyboard=True,
+        input_field_placeholder="Обновленные данные"
+    )
+
     url = 'http://vesnarsc.ru/Remotes/hh65rfsdcjoiH58dfv54t8c8x5wGGG147Flloc'
     async with aiohttp.ClientSession() as session:
+        text = ''
         async with session.get(url) as response:
             dt = await response.text()
             print(dt)
@@ -74,12 +88,13 @@ async def make_request_and_send():
                 if dt_entry.get("gorod") is not None:
                     print(dt_entry.get("gorod"))
                     try:
-                        await sendet_messsage(
+                        message_text = await get_text(
                             url=f"http://vesnarsc.ru/Remotes/{dt_entry.get('name')}",
                             city=dt_entry.get("gorod")
                         )
+                        text += message_text + "\n"
                     except: pass
-    
+            await bot.send_message(chat_id=CHAT_ID, text=text, reply_markup=keyboard)
 
 
 
@@ -91,12 +106,12 @@ async def scheduled(wait_for):
     while True:
         await asyncio.sleep(wait_for)
         now = datetime.now()
-        current_time = now.strftime("%H:%M:%S")
+        current_time = now.strftime("%H:%M")
         print(current_time)
 
         # Планируем запрос только в указанные часы
-        #if current_time in ["14:00:00", "16:00:00", "18:00:00"]:
-        await make_request_and_send()
+        if current_time in ["14:00", "17:00", "19:00", "21:00"]:
+            await make_request_and_send()
 
 if __name__ == '__main__':
-    asyncio.run(scheduled(10))
+    asyncio.run(scheduled(60))
